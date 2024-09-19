@@ -1,0 +1,428 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: black;
+    color: black;
+}
+
+.caja_1 {
+    width: 600px; /* Ancho aumentado del contenedor */
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.9); /* Sombra opcional */
+}
+
+.caja_1 img.logo {
+    max-width: 200px;
+    height: 150px;
+    margin-bottom: 0px;
+}
+
+.caja_1 h1, .caja_1 p {
+    color: black;
+}
+
+.caja_1 p {
+    margin-bottom: 30px; /* Ajusta el espacio entre el párrafo y el primer input */
+}
+
+.caja_1 form input[type="text"],
+.caja_1 form input[type="password"] {
+    width: calc(100% - 22px);
+    padding: 8px;
+    margin-bottom: 20px;
+    background: none;
+    border: none;
+    border-bottom: 1px solid black;
+    color: black;
+    outline: none;
+    transition: all 0.3s;
+    box-sizing: border-box;
+}
+
+.caja_1 form input[type="text"]:focus,
+.caja_1 form input[type="password"]:focus {
+    border-bottom: 2px solid red;
+}
+
+.caja_1 form input[type="text"]:focus::placeholder,
+.caja_1 form input[type="password"]:focus::placeholder {
+    color: transparent;
+}
+
+.caja_1 form input[type="submit"], button {
+    width: 150px;
+    padding: 8px;
+    background-color: rgba(243, 27, 27, 0.349);
+    border: none;
+    color: black;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+    margin-top: 20px;
+}
+
+.caja_1 form input[type="submit"]:hover {
+    background-color: red;
+    color: black;
+}
+
+.caja_1 a {
+    display: block;
+    margin-top: 20px;
+    color: red;
+    text-decoration: none;
+    font-size: 12px;
+}
+
+.caja_1 a:hover {
+    text-decoration: underline;
+}
+
+/* Label en rojo brillante */
+.caja_1 label {
+    color: red;
+    font-size: 12px;
+    position: absolute;
+    pointer-events: none;
+    left: 10px;
+    top: 8px;
+    transition: 0.2s ease all;
+}
+
+.caja_1 input:focus ~ label,
+.caja_1 input:not(:placeholder-shown) ~ label {
+    top: -18px;
+    font-size: 10px;
+    color: red;
+}
+
+/* Contenedor para el input y el label */
+.caja_1 .input-container {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.caja2 {
+    width: 1050px; /* Aumenta el ancho de la caja */
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.9);
+    margin-top: 25px; /* Añade un margen superior para que no esté pegada a la parte superior */
+}
+
+/* Estilo del título */
+.caja2 h2 {
+    color: red; /* Color del título en rojo */
+    margin-bottom: 20px;
+}
+
+/* Contenedor del input y la imagen */
+.input-container {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Centra el contenido del contenedor */
+    margin-bottom: 20px; /* Espacio debajo del contenedor del input */
+}
+
+/* Estilo del input */
+.caja2 input[type="text"] {
+    width: 300px; /* Ajusta el ancho del input para que la imagen quepa al lado */
+    padding: 8px;
+    border: none;
+    border-bottom: 1px solid black;
+    color: black;
+    margin-top: 30px;
+    outline: none;
+    background: none;
+    font-size: 16px;
+    position: relative;
+    left: -350px;
+    
+}
+
+/* Estilo de la imagen */
+.caja2 img.lupa {
+    width: 30px;
+    height: 30px;
+    position: relative;
+    left: -380px;
+    top: 15px;
+}
+
+/* Estilo de la tabla */
+.caja2 table {
+    width: 100%; /* Hace que la tabla ocupe todo el ancho disponible */
+    border-collapse: collapse;
+    margin-top: 50px; /* Espacio entre el input y la tabla */
+}
+
+.caja2 table, .caja_2 th, .caja2 td {
+    border: 1px solid black; /* Borde negro para la tabla */
+}
+
+.caja2 th, .caja2 td {
+    padding: 10px;
+    text-align: left;
+}
+
+.caja2 th {
+    background-color: #f2f2f2; /* Fondo gris claro para los encabezados de columna */
+    color: black;
+}
+
+/* Estilo del navbar */
+nav ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0 0 20px 0;
+    display: flex;
+    justify-content: flex-end; /* Alinea los elementos del navbar a la derecha */
+}
+
+nav ul li {
+    margin-right: 20px;
+}
+
+nav ul li a {
+    text-decoration: none;
+    font-weight: bold;
+    color: black; /* Establece el color del texto predeterminado en negro */
+}
+
+nav ul li a#cer {
+    color: red; /* "Cerrar sesión" en rojo */
+}
+
+nav ul li a:hover {
+    text-decoration: underline;
+}
+
+/* Estilos para el pop-up */
+.popup {
+    display: none; /* Oculto por defecto */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+}
+
+.popup-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.popup-content p {
+    margin-bottom: 20px;
+}
+
+.popup-content button {
+    padding: 10px 20px;
+    margin: 0 10px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.popup-content .confirm {
+    background-color: red;
+    color: white;
+}
+
+.popup-content .cancel {
+    background-color: grey;
+    color: white;
+}
+#p{
+    color: black;
+}
+
+/* Estilos para los modales */
+.modal {
+    display: none; /* Oculto por defecto */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Asegúrate de que esté por encima de otros elementos */
+}
+
+.modal-content {
+    background-color: white;
+    margin: auto; /* Asegura que el modal esté centrado */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 50%; /* Ajusta el ancho del modal según tu preferencia */
+    max-width: 600px; /* Limita el ancho máximo del modal */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Añade sombra para un efecto más estético */
+    border-radius: 8px;
+}
+
+.close {
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: red;
+}
+
+
+.close:hover {
+    color: red; /* Color del botón de cerrar al pasar el ratón */
+}
+
+/* Estilo de los formularios dentro del modal */
+.modal form {
+    display: flex;
+
+    flex-direction: column;
+}
+
+/* Botones de formulario en el modal */
+.modal button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s; /* Transición para el color de fondo */
+}
+
+.modal button:hover {
+    background-color: #0056b3; /* Color de fondo al pasar el ratón */
+}
+
+.container button{
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+}
+
+
+.btn-group {
+    display: flex;
+    justify-content: space-between; /* Espacio entre los grupos de botones */
+    width: 100%; /* Asegura que el grupo ocupe todo el ancho disponible */
+}
+
+.btn-group .btn {
+    margin: 0 10px; /* Espaciado opcional entre botones */
+}
+
+.btn-group button:nth-child(3){
+    margin-left: auto; /* Mueve los últimos dos botones al lado opuesto */
+}
+.btn-group button:nth-child(3), .btn-group button:nth-child(4){
+    background-color: #88b0dc;
+}
+
+.tabla-contenedor table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.tabla-contenedor th, .tabla-contenedor td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.tabla-contenedor th {
+    background-color: #f2f2f2;
+    color: #333;
+}
+
+.tabla-contenedor td button {
+    background-color: #f33;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.tabla-contenedor td button:hover {
+    background-color: #d22;
+}
+
+.input-container input {
+    width: calc(100% - 50px);
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.input-container img {
+    width: 30px;
+    cursor: pointer;
+    position: relative;
+    top: -30px;
+    left: calc(100% - 40px);
+}
+
+.modal-content {
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    width: 500px;
+    margin: auto;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+}
+
+.modal-content input, .modal-content textarea {
+    width: 95%;
+    padding: 8px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+.modal-content textarea {
+    height: 1%;
+}
+.modal-content select{
+    width: 99%;
+    padding: 8px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+.modal-content button {
+    width: 100%;
+    padding: 10px;
+    background-color: #f33;
+    border: none;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.modal-content button:hover {
+    background-color: #d22;
+}

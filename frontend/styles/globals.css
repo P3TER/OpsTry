@@ -1,0 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Add your custom styles here */
+body {
+  @apply bg-black text-black;
+}
+
+.input-container {
+  @apply relative mb-4;
+}
+
+.input-container input {
+  @apply w-full p-2 bg-transparent border-b border-gray-300 focus:border-red-500 transition-colors;
+}
+
+.input-container label {
+  @apply absolute left-0 -top-3.5 text-red-500 text-sm transition-all;
+}
+
+.input-container input:focus ~ label,
+.input-container input:not(:placeholder-shown) ~ label {
+  @apply -top-5 text-xs;
+}
