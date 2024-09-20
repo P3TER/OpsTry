@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movimientos</title>
+    <link rel="stylesheet" href="/public/css/estilo.css"> <!-- Asegúrate de tener tu CSS aquí -->
+ 
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="/logout">Cerrar Sesión</a></li>
+            <li><a href="/super_admin_directores" >Directores de Sedes</a></li>
+        </ul>
+    </nav>
+    
+    <div>
+        <h1>Movimientos</h1>
+        <form method="GET" action="/movimientos" style="margin-bottom: 20px;">
+            <input type="text" name="search" placeholder="Buscar movimientos..." required>
+            <button type="submit">Buscar</button>
+        </form>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID Movimiento</th>
+                    <th>ID Equipo</th>
+                    <th>Tipo</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <button>Editar</button>
+                            <button>Elimiar</button>
+                        </td>
+                    </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
