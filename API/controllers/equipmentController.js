@@ -1,26 +1,34 @@
 const Equipo = require('../models/Equipo.js')
 const Movimiento = require('../models/Movimiento.js')
 const path = require('path')
-const { generarCodBarras } = require('../utils/generadorCodBarras.js');
+const  generarCodBarras  = require('../utils/generadorCodBarras.js');
 const Joi = require('joi');
+const Usuario = require('../models/Usuario.js');
 
 
 
 exports.createEquipo = async (req, res) => {
     try {
+        console.log('Received request body:', req.body);
         const equipoSchema = Joi.object().keys({
             marca: Joi.string().required(),
             descripcion: Joi.string().required(),
             usuario_id: Joi.number().integer().required()
         });
-        const { marca, descripcion, usuario_id } = req.body
 
         const { error } = equipoSchema.validate(req.body);
         if (error) {
-            return res.status(400).send(`Error de validación: ${error.details[0].message}`);
+            return res.status(400).json({ message: `Error de validación: ${error.details[0].message}` });
         }
 
-        const textoCodBarras = `${marca}-${usuario.documento}`
+        const { marca, descripcion, usuario_id } = req.body;
+
+        const usuario = await Usuario.findByPk(usuario_id);
+        if (!usuario) {
+            return res.status(404).json({ message: 'Usuario no encontrado' });
+        }
+
+        const textoCodBarras = `${marca}-${usuario.numero_documento}`;
 
         const equipoExistente = await Equipo.findOne({ where: { codigoBarras: textoCodBarras } });
         if (equipoExistente) {
@@ -33,19 +41,21 @@ exports.createEquipo = async (req, res) => {
             codigoBarras: textoCodBarras,
             usuario_id,
             novedad: 'Recien creado'
-        })
+        });
 
-        const rutaCodBarras = path.join(__dirname, `../codBarras/${textoCodBarras}.png`)
-        await generarCodBarras(textoCodBarras, rutaCodBarras)
+        console.log('Generating barcode...');
+        const rutaCodBarras = path.join(__dirname, `../codBarras/${textoCodBarras}.png`);
+        await generarCodBarras(textoCodBarras, rutaCodBarras);
+        console.log('Barcode generated successfully');
 
         res.status(201).json({
             message: 'Equipo registrado',
             equipo: nuevoEquipo,
             codigoBarras: `/codBarras/${textoCodBarras}.png`
-        })
+        });
     } catch (err) {
-        console.error(err)
-        res.status(500).send('Fallo al registrar equipo')
+        console.error(err);
+        res.status(500).json({ message: 'Fallo al registrar equipo', error: err.message });
     }
 };
 

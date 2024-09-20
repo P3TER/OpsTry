@@ -19,24 +19,27 @@ exports.registerUsuario = async (req, res) => {
     try {
         const { tipo_documento, numero_documento, nombre, apellido, sede_id, telefono, contra, rol, novedad } = req.body;
 
-        if (!tipo_documento || !numero_documento || !nombre || !apellido || !sede_id || !telefono || !contra || !rol) {
-            return res.status(400).send('Todos los campos son requeridos');
-        }
+        // if (!tipo_documento || !numero_documento || !nombre || !apellido || !sede_id || !telefono || !contra || !rol) {
+        //     console.log('es en el primer if');
+            
+        //     return res.status(400).send('Todos los campos son requeridos');
+        // }
 
-        const { error } = usuarioSchema.validate(req.body);
-        if (error) {
-            return res.status(400).send(`Error de validación: ${error.details[0].message}`);
-        }
+        // const { error } = usuarioSchema.validate(req.body);
+        // if (error) {
+        //     console.log('es en el segundo if');
+        //     return res.status(400).send(`Error de validación: ${error.details[0].message}`);
+        // }
 
         const contraEncriptada = await bcrypt.hash(contra, 10);
 
         await Usuario.create({
-            tipo_documento,
-            numero_documento,
-            nombre,
-            apellido,
-            sede_id,
-            telefono,
+            tipo_documento: tipo_documento || 'NN',
+            numero_documento: numero_documento || '0909209',
+            nombre: nombre || 'N/S',
+            apellido: apellido || 'N/S',
+            sede_id: sede_id || 1,
+            telefono: telefono || 9457823,
             contra: contraEncriptada,
             rol,
             novedad: (novedad || 'Creado por un director')
@@ -181,8 +184,6 @@ exports.perfil = async (req, res) => {
     }
 };
 
-// Obtener usuarios
-// Obtener usuarios
 exports.getUsuarios = async (req, res) => {
     try {
         const usuarios = await Usuario.findAll({
@@ -198,7 +199,6 @@ exports.getUsuarios = async (req, res) => {
     }
 };
 
-// Obtener usuarios por rol
 exports.getUsuariosByRol = async (req, res) => {
     try {
         const { rol } = req.query;

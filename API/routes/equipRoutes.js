@@ -4,7 +4,7 @@ const { createEquipo, getEquipo, updateEquipo, ingresoYSalida, getMovimientos, g
 
 const router = express.Router()
 
-router.post('/registrarEquipo', verifySession, isVigilante, createEquipo)
+router.post('/registrarEquipo', verifySession, createEquipo)
 router.get('/movimientos', verifySession, isVigilante, getMovimientos)
 router.get('/:codigoBarras', verifySession, getEquipo)
 router.put('/:codigoBarras', verifySession, isVigilante, updateEquipo)

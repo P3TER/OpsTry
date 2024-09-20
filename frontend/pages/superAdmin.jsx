@@ -142,6 +142,7 @@ function SuperAdmin() {
       setShowCreateDirectorForm(false)
       const directoresResponse = await api.get('/auth/usuarios-por-rol?rol=Director');
       setDirectores(directoresResponse.data);
+      return router.reload()
     } catch (error) {
       console.error('Error creating director:', error)
       setToastMessage('Error al crear el director')

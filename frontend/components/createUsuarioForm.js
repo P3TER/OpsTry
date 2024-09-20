@@ -1,119 +1,162 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios'; // or your preferred HTTP client
+import { Button } from "@/components/ui/Button";
 
-export const CreateUsuarioForm = ({ onSubmit, userRole, userId }) => {
-    const [tipoDocumento, setTipoDocumento] = useState('');
-    const [numeroDocumento, setNumeroDocumento] = useState('');
-    const [nombre, setNombre] = useState('');
-    const [apellido, setApellido] = useState('');
-    const [telefono, setTelefono] = useState('');
-    const [contra, setContra] = useState('');
-    const [rol, setRol] = useState('');
-    const [novedad, setNovedad] = useState('');
-    const [documentTypes, setDocumentTypes] = useState([]);
-    const [sedes, setSedes] = useState([]);
-    const [loading, setLoading] = useState(true);
+function UserForm({ userData, onSubmit, isEditMode = false, currentUser, onClose }) {
+    const [formData, setFormData] = useState({
+        nombre: '',
+        apellido: '',
+        tipo_documento: '',
+        numero_documento: '',
+        telefono: '',
+        sede_id: currentUser ? currentUser.sede_id : '',
+        rol: currentUser && currentUser.rol === 'Director' ? 'Vigilante' : 'Usuario',
+        contra: '',  // Agregar el campo de contraseña
+    });
+
+    const [documentTypes, setDocumentTypes] = useState([
+        { id: "CC", name: "Cédula de Ciudadanía" },
+        { id: "TI", name: "Tarjeta de Identidad" },
+        { id: "CE", name: "Cédula de Extranjería" },
+        { id: "OT", name: "Otro" },
+    ]);
 
     useEffect(() => {
-        setDocumentTypes([
-            { id: 1, name: "Cédula" },
-            { id: 2, name: "Tarjeta de Identidad" },
-            { id: 3, name: "Otro" },
-        ]);
-
-        axios.get('/api/sedes') // or your API endpoint
-            .then(response => {
-                setSedes(response.data);
-            })
-            .catch(error => {
-                console.error(error);
-            })
-            .finally(() => {
-                setLoading(false);
+        if (userData && isEditMode) {
+            setFormData({
+                nombre: userData.nombre,
+                apellido: userData.apellido,
+                tipo_documento: userData.tipo_documento,
+                numero_documento: userData.numero_documento,
+                telefono: userData.telefono,
+                sede_id: userData.sede_id,
+                rol: userData.rol,
+                contra: '',  // Resetea la contraseña en modo edición
             });
-    }, []);
+        }
+    }, [userData, isEditMode]);
 
     useEffect(() => {
-        if (userRole === 'superadmin') {
-            setRol('director');
-        } else if (userRole === 'director') {
-            setRol('vigilante');
-        } else if (userRole === 'vigilante') {
-            setRol('usuario');
+        if (currentUser) {
+            setFormData(prev => ({
+                ...prev,
+                sede_id: currentUser.sede_id,
+                rol: currentUser.rol === 'Director' ? 'Vigilante' : 'Usuario',
+            }));
         }
-    }, [userRole]);
+    }, [currentUser]);
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({ ...prev, [name]: value }));
+    };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const userData = {
-            tipoDocumento,
-            numeroDocumento,
-            nombre,
-            apellido,
-            telefono,
-            contra,
-            rol,
-            novedad: `Creado por ${userRole} con id ${userId}`,
-            sedeId: userId
-        };
-        onSubmit(userData);
+        onSubmit(formData);
     };
 
-    if (loading) {
-        return <p>Cargando...</p>;
-    }
-
     return (
-        <form onSubmit={handleSubmit}>
-            <label>
-                Tipo de Documento:
-                <select value={tipoDocumento} onChange={(e) => setTipoDocumento(e.target.value)}>
-                    <option value="">Seleccione un tipo de documento</option>
-                    {documentTypes.map((documentType) => (
-                        <option key={documentType.id} value={documentType.id}>{documentType.name}</option>
-                    ))}
-                </select>
-            </label>
-            <label>
-                Número de Documento:
-                <input type="text" value={numeroDocumento} onChange={(e) => setNumeroDocumento(e.target.value)} />
-            </label>
-            <label>
-                Nombre:
-                <input type="text" value={nombre} onChange={(e) => setNombre(e.target.value)} />
-            </label>
-            <label>
-                Apellido:
-                <input type="text" value={apellido} onChange={(e) => setApellido(e.target.value)} />
-            </label>
-            <label>
-                Teléfono:
-                <input type="text" value={telefono} onChange={(e) => setTelefono(e.target.value)} />
-            </label>
-            <label>
-                Contraseña:
-                <input type="password" value={contra} onChange={(e) => setContra(e.target.value)} />
-            </label>
-            <label>
-                Rol:
-                <input type="text" value={rol} disabled />
-            </label>
-            <label>
-                Novedad:
-                <input type="text" value={novedad} disabled />
-            </label>
-            {userRole === 'superadmin' && (
-                <label>
-                    Sede Asignada:
-                    <select value={sedes.id} onChange={(e) => setSedes(e.target.value)}>
-                        <option value="">Seleccione una sede</option>
-                        {sedes.map((sede) => (
-                            <option key={sede.id} value={sede.id}>{sede.name}</option>
-                        ))}
-                    </select>
-                </label>
-            )}
-            <button type="submit">Crear Director</button>
-        </form>
+        <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center">
+            <div className="bg-white p-8 rounded-lg shadow-lg">
+                <h3 className="text-lg font-bold mb-4">{isEditMode ? 'Editar Usuario' : 'Crear Usuario'}</h3>
+                <form onSubmit={handleSubmit}>
+                    <div className="flex flex-wrap">
+                        <div className="w-1/2 pr-4">
+                            <div className="mb-2">
+                                <label htmlFor="nombre" className="block text-sm font-medium text-gray-700">Nombre</label>
+                                <input
+                                    type="text"
+                                    name="nombre"
+                                    value={formData.nombre}
+                                    onChange={handleChange}
+                                    required
+                                    className="mt-1 block w-full p-2 border border-gray-300 rounded"
+                                />
+                            </div>
+                            <div className="mb-2">
+                                <label htmlFor="tipo_documento" className="block text-sm font-medium text-gray-700">Tipo de Documento</label>
+                                <select
+                                    name="tipo_documento"
+                                    value={formData.tipo_documento}
+                                    onChange={handleChange}
+                                    required
+                                    className="mt-1 block w-full p-2 border border-gray-300 rounded"
+                                >
+                                    <option value="">Seleccione un tipo de documento</option>
+                                    {documentTypes.map((documentType) => (
+                                        <option key={documentType.id} value={documentType.id}>
+                                            {documentType.name}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div className="mb-2">
+                                <label htmlFor="numero_documento" className="block text-sm font-medium text-gray-700">Número de Documento</label>
+                                <input
+                                    type="text"
+                                    name="numero_documento"
+                                    value={formData.numero_documento}
+                                    onChange={handleChange}
+                                    required
+                                    className="mt-1 block w-full p-2 border border-gray-300 rounded"
+                                />
+                            </div>
+                        </div>
+                        <div className="w-1/2 pl-4">
+                            <div className="mb-2">
+                                <label htmlFor="apellido" className="block text-sm font-medium text-gray-700">Apellido</label>
+                                <input
+                                    type="text"
+                                    name="apellido"
+                                    value={formData.apellido}
+                                    onChange={handleChange}
+                                    required
+                                    className="mt-1 block w-full p-2 border border-gray-300 rounded"
+                                />
+                            </div>
+                            <div className="mb-2">
+                                <label htmlFor="telefono" className="block text-sm font-medium text-gray-700">Teléfono</label>
+                                <input
+                                    type="tel"
+                                    name="telefono"
+                                    value={formData.telefono}
+                                    onChange={handleChange}
+                                    required
+                                    className="mt-1 block w-full p-2 border border-gray-300 rounded"
+                                />
+                            </div>
+                            <div className="mb-2">
+                                <label htmlFor="contra" className="block text-sm font-medium text-gray-700">Contraseña</label>
+                                <input
+                                    type="password"
+                                    name="contra"  // Este debe coincidir con el nombre en formData
+                                    value={formData.contra}
+                                    onChange={handleChange}
+                                    required
+                                    className="mt-1 block w-full p-2 border border-gray-300 rounded"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    <div className="flex justify-center mt-4 space-x-2">
+                        <Button
+                            type="button"
+                            onClick={() => onClose}  // Cerrar el modal
+                            className="py-2 px-4 border rounded bg-gray-300 text-black"
+                        >
+                            Cancelar
+                        </Button>
+                        <Button
+                            type="submit"
+                            className="py-2 px-4 border rounded bg-blue-500 text-white"
+                        >
+                            {isEditMode ? 'Actualizar Usuario' : 'Crear Usuario'}
+                        </Button>
+                    </div>
+                </form>
+            </div>
+        </div>
     );
-};
+}
+
+export default UserForm;

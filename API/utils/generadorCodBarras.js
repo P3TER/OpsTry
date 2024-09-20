@@ -1,28 +1,27 @@
-const bwipjs = require('bwip-js')
-const { error } = require('console')
-const fs = require('fs')
-const path = require('path')
+const bwipjs = require('bwip-js');
+const fs = require('fs').promises;
+const path = require('path');
 
 const generarCodBarras = async (codigo, rutaPng) => {
     try {
-        await bwipjs.toBuffer({
+        const dir = path.dirname(rutaPng);
+        await fs.mkdir(dir, { recursive: true });
+
+        const png = await bwipjs.toBuffer({
             bcid: 'code128',
-            text: { codigo },
+            text: codigo,
             scale: 3,
             height: 10,
             includetext: true,
             textxalign: 'center'
-        }, (error, png) => {
-            if (error) {
-                throw error
-            }
+        });
 
-            fs.writeFileSync(rutaPng, png)
-        })
-        console.log(`Creado y guardado en ${ rutaPng }`);
-    } catch (err) { 
-        console.error(`Error al generar codigo de barras: ${err}`)
+        await fs.writeFile(rutaPng, png);
+        console.log(`Código de barras creado y guardado en ${rutaPng}`);
+    } catch (err) {
+        console.error(`Error al generar código de barras: ${err}`);
+        throw err;
     }
-}
+};
 
-module.exports = generarCodBarras
+module.exports = generarCodBarras;

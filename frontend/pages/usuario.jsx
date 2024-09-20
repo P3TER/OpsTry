@@ -21,6 +21,8 @@ function Usuario() {
   const [loading, setLoading] = useState(true)
   const [showLogoutPopup, setShowLogoutPopup] = useState(false)
 
+  // const userName = localStorage.getItem('nombre')
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -76,17 +78,6 @@ function Usuario() {
       <Layout>
         <div className="p-8 bg-gray-100 min-h-screen text-black">
           <h2 className="text-2xl font-bold mb-6">Usuario - Información Personal y Movimientos</h2>
-          {/* Buscador */}
-          <div className="mb-4 flex items-center">
-            <input
-              type="text"
-              placeholder="Buscar movimiento"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="max-w-sm mr-2 p-2 border border-gray-300 rounded"
-            />
-            <Image src="/buscar.png" alt="Buscar" width={20} height={20} />
-          </div>
 
           {/* Botones de Navegación */}
           <div className="mb-4 flex justify-between">
@@ -182,4 +173,4 @@ function Usuario() {
   )
 }
 
-export default withAuth(Usuario, ['Usuario'])
+export default withAuth(Usuario, 'Usuario')
