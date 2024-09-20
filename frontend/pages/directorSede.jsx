@@ -80,9 +80,55 @@ function VigilanteSede() {
 
     const filteredUsuarios = usuarios.filter(usuario =>
         (usuario.nombre?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
-        (usuario.numero_documento || '').includes(searchTerm) ||
+        (String(usuario.numero_documento) || '').includes(searchTerm) ||
         (usuario.sede_id?.nombre_sede?.toLowerCase() || '').includes(searchTerm.toLowerCase())
     )
+
+    const handleSearch = async () => {
+        if (!searchTerm) {
+            setToastMessage('Por favor, ingrese un término de búsqueda.')
+            setShowToast(true)
+            return
+        }
+
+        try {
+            setLoading(true)
+            const [equiposResponse, usuariosResponse] = await Promise.all([
+                api.get('/equipos/'),
+                api.get('/auth/usuarios-por-rol?rol=Vigilante')
+            ])
+
+            const filteredEquipos = equiposResponse.data.filter(equipo =>
+                equipo.codigoBarras.includes(searchTerm) ||
+                equipo.marca.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                equipo.descripcion.toLowerCase().includes(searchTerm.toLowerCase())
+            )
+
+            const filteredUsuarios = usuariosResponse.data.filter(usuario =>
+                (usuario.nombre?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
+                (String(usuario.numero_documento) || '').includes(searchTerm) ||
+                (usuario.sede_id?.nombre_sede?.toLowerCase() || '').includes(searchTerm.toLowerCase())
+            )
+
+            setEquipos(filteredEquipos)
+            setUsuarios(filteredUsuarios)
+
+            if (filteredEquipos.length > 0) {
+                setActiveTable('equipos')
+            } else if (filteredUsuarios.length > 0) {
+                setActiveTable('usuarios')
+            } else {
+                setToastMessage('No se encontraron resultados.')
+                setShowToast(true)
+            }
+        } catch (error) {
+            console.error('Error searching:', error)
+            setToastMessage('Error al realizar la búsqueda. Por favor, intente de nuevo.')
+            setShowToast(true)
+        } finally {
+            setLoading(false)
+        }
+    }
 
     const handleSubmitUsuario = async (e) => {
         e.preventDefault()
@@ -113,18 +159,11 @@ function VigilanteSede() {
     const handleSubmitEquipo = async (e) => {
         e.preventDefault()
         try {
-            const equipoData = {
-            marca,
-            descripcion,
-            usuario_id: selectedUsuarioId
-        };
-        console.log('Sending equipment data:', equipoData);
-        const response = await api.post('/equipos/registrarEquipo', equipoData)
-            if(!response){
-                setToastMessage('Error al crear el Equipo')
-                setShowToast(true)
-                return;
-            }
+            await api.post('/equipos/', {
+                marca,
+                descripcion,
+                usuario_id: selectedUsuarioId
+            })
             setToastMessage('Equipo creado exitosamente')
             setShowToast(true)
             setShowCreateEquipoForm(false)
@@ -132,7 +171,7 @@ function VigilanteSede() {
             setEquipos(equiposResponse.data)
         } catch (error) {
             console.error('Error creating Equipo:', error)
-            setToastMessage(error.response?.data?.message || 'Error al crear el Equipo')
+            setToastMessage('Error al crear el Equipo')
             setShowToast(true)
         }
     }
@@ -146,7 +185,6 @@ function VigilanteSede() {
                 descripcion,
                 novedad: `Actualizado por el vigilante con id: ${vigilante}`,
             }
-            console.log(data);
 
             await api.put(`/equipos/${equipoId}`, data)
 
@@ -220,12 +258,17 @@ function VigilanteSede() {
                     <div className="mb-4 flex items-center">
                         <input
                             type="text"
-                            placeholder="Buscar registro"
+                            placeholder="Buscar por código de barras, marca, descripción o usuario"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                             className="max-w-sm mr-2 p-2 border border-gray-300 rounded"
                         />
-                        <Image src="/buscar.png" alt="Buscar" width={20} height={20} />
+                        <button
+                            onClick={handleSearch}
+                            className="py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-600"
+                        >
+                            <Image src="/buscar.png" alt="Buscar" width={20} height={20} />
+                        </button>
                     </div>
 
                     {/* Botones de Navegación */}
@@ -274,7 +317,7 @@ function VigilanteSede() {
                                 <tbody className="bg-white divide-y divide-gray-200">
                                     {filteredUsuarios.map((usuario) => (
                                         <tr key={usuario.id_usuario}>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{usuario.nombre} {usuario.apellido}</td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{usuario.nombre}</td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{usuario.numero_documento}</td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{usuario.telefono}</td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
